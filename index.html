@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>[Your Name] — Artist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400&family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --border-light: #333;
+      --text: #d4d0c8;
+      --muted: #6b6760;
+      --accent: #c8b89a;
+      --accent-dim: #7a6e5f;
+      --white: #ede9e0;
+      --red: #8b2e2e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 1.7;
+      cursor: crosshair;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(8px);
+    }
+    nav .inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+    .nav-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.12em;
+      color: var(--white);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 6rem;
+      padding-top: 52px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+      opacity: 0.5;
+    }
+    .hero-h-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+      opacity: 0.4;
+    }
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent-dim);
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 120px);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      margin-bottom: 2rem;
+    }
+    .hero-title span { color: var(--accent); }
+    .hero-sub {
+      max-width: 480px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      border-left: 1px solid var(--border-light);
+      padding-left: 1.25rem;
+    }
+    .hero-coords {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 0;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── MANIFESTO ── */
+    .manifesto-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(18px, 2.5vw, 26px);
+      line-height: 1.5;
+      color: var(--white);
+      font-weight: 300;
+      max-width: 720px;
+    }
+    .manifesto-text em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .skill-cell {
+      background: var(--bg);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+    .skill-cell:hover { background: var(--surface); }
+    .skill-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .skill-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── ARTWORKS ── */
+    .artwork-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .artwork-item {
+      aspect-ratio: 1;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    .artwork-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(30%) contrast(1.05);
+      transition: filter 0.4s, transform 0.4s;
+    }
+    .artwork-item:hover img {
+      filter: grayscale(0%) contrast(1.1);
+      transform: scale(1.03);
+    }
+    .artwork-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14,14,14,0.75);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .artwork-item:hover .artwork-overlay { opacity: 1; }
+    .artwork-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.05em;
+      color: var(--white);
+    }
+    .artwork-year {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    /* Placeholder for artwork items without images */
+    .artwork-placeholder {
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ── MUSIC ── */
+    .music-list { display: flex; flex-direction: column; }
+    .music-track {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+      transition: background 0.15s;
+    }
+    .music-track:first-child { border-top: 1px solid var(--border); }
+    .track-left { display: flex; align-items: center; gap: 1.25rem; }
+    .track-num {
+      font-size: 11px;
+      color: var(--muted);
+      width: 24px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .track-info { display: flex; flex-direction: column; }
+    .track-title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--white);
+    }
+    .track-meta { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+    .track-right { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; }
+    .track-duration { font-size: 12px; color: var(--muted); }
+    .track-link {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      text-decoration: none;
+      border: 1px solid var(--border-light);
+      padding: 4px 10px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .track-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── RESUME ── */
+    .resume-block { margin-bottom: 3rem; }
+    .resume-block:last-child { margin-bottom: 0; }
+    .resume-block-title {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 1.25rem;
+    }
+    .resume-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .resume-year { font-size: 12px; color: var(--muted); padding-top: 2px; }
+    .resume-content-title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+    .resume-content-sub { font-size: 12px; color: var(--muted); }
+
+    /* ── CONTACT ── */
+    #contact { border-bottom: none; }
+    .contact-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .contact-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 7vw, 80px);
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+    .contact-link {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-link:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .artwork-grid { grid-template-columns: repeat(2, 1fr); }
+      .resume-item { grid-template-columns: 80px 1fr; gap: 1rem; }
+      .contact-inner { flex-direction: column; align-items: flex-start; }
+      .contact-links { align-items: flex-start; }
+      nav .inner { padding: 0 1rem; }
+      .container { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="inner">
+      <span class="nav-name">[Your Name]</span>
+      <ul class="nav-links">
+        <li><a href="#manifesto">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#resume">CV</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <!-- Structural grid lines -->
+    <div class="hero-grid-line" style="left: 33.3%;"></div>
+    <div class="hero-grid-line" style="left: 66.6%;"></div>
+    <div class="hero-h-line" style="top: 35%;"></div>
+
+    <div class="container">
+      <p class="hero-tag">Artist / Musician / Maker</p>
+      <h1 class="hero-title">
+        [Your<br><span>Name]</span>
+      </h1>
+      <p class="hero-sub">
+        <!-- Edit this: brief positioning line -->
+        Working at the edge of sound, image, and material —<br>
+        where grit becomes form and silence carries weight.
+      </p>
+    </div>
+    <div class="hero-coords">48°51'N 2°21'E / 2025</div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section id="manifesto">
+    <div class="container">
+      <p class="section-label">what i explore & believe</p>
+      <p class="manifesto-text">
+        <!-- Edit this: your artistic statement in your own words -->
+        Art is not decoration. It is <em>evidence</em> — of time spent, of friction endured, of
+        questions that refuse to resolve. I work in the space between breakdown and structure,
+        finding the <em>beauty in what's worn</em>, overlooked, or raw. Sound and image are not
+        separate disciplines to me — they are two frequencies of the same transmission.
+        I believe in making things that <em>resist comfort</em> without losing humanity.
+      </p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label">skills</p>
+      <div class="skills-grid">
+
+        <!-- Edit these: add/remove/rename skill cells -->
+        <div class="skill-cell">
+          <p class="skill-name">Visual Art</p>
+          <p class="skill-desc">Drawing, painting, mixed media, installation, collage</p>
+        </div>
+        <div class="skill-cell">
+          <p class="skill-name">Music</p>
+          <p class="skill-desc">Composition, production, sound design, field recording</p>
+        </div>
+        <div class="skill-cell">
+          <p class="skill-name">Photography</p>
+          <p class="skill-desc">Documentary, analog, darkroom printing</p>
+        </div>
+        <div class="skill-cell">
+          <p class="skill-name">Writing</p>
+          <p class="skill-desc">Artist statements, criticism, lyric writing</p>
+        </div>
+        <div class="skill-cell">
+          <p class="skill-name">Software</p>
+          <p class="skill-desc">Ableton Live, Photoshop, After Effects, Figma</p>
+        </div>
+        <div class="skill-cell">
+          <p class="skill-name">Collaboration</p>
+          <p class="skill-desc">Cross-disciplinary projects, residencies, live performance</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTWORKS -->
+  <section id="work">
+    <div class="container">
+      <p class="section-label">selected works</p>
+      <div class="artwork-grid">
+
+        <!--
+          HOW TO ADD YOUR ARTWORK:
+          Replace <div class="artwork-placeholder">...</div> with:
+          <img src="images/your-image.jpg" alt="Artwork title" />
+          Put your images in an /images/ folder alongside index.html
+        -->
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 01</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2024 — Medium</p>
+          </div>
+        </div>
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 02</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2024 — Medium</p>
+          </div>
+        </div>
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 03</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2023 — Medium</p>
+          </div>
+        </div>
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 04</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2023 — Medium</p>
+          </div>
+        </div>
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 05</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2022 — Medium</p>
+          </div>
+        </div>
+
+        <div class="artwork-item">
+          <div class="artwork-placeholder">image 06</div>
+          <div class="artwork-overlay">
+            <p class="artwork-title">Work Title Here</p>
+            <p class="artwork-year">2022 — Medium</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section id="music">
+    <div class="container">
+      <p class="section-label">music</p>
+      <div class="music-list">
+
+        <!-- Edit these: your tracks. Link href can be Spotify, SoundCloud, Bandcamp, etc. -->
+        <div class="music-track">
+          <div class="track-left">
+            <span class="track-num">01</span>
+            <div class="track-info">
+              <span class="track-title">Track Title</span>
+              <span class="track-meta">Album / EP Name · 2024</span>
+            </div>
+          </div>
+          <div class="track-right">
+            <span class="track-duration">3:42</span>
+            <a href="#" class="track-link">Listen</a>
+          </div>
+        </div>
+
+        <div class="music-track">
+          <div class="track-left">
+            <span class="track-num">02</span>
+            <div class="track-info">
+              <span class="track-title">Track Title</span>
+              <span class="track-meta">Album / EP Name · 2024</span>
+            </div>
+          </div>
+          <div class="track-right">
+            <span class="track-duration">5:18</span>
+            <a href="#" class="track-link">Listen</a>
+          </div>
+        </div>
+
+        <div class="music-track">
+          <div class="track-left">
+            <span class="track-num">03</span>
+            <div class="track-info">
+              <span class="track-title">Track Title</span>
+              <span class="track-meta">Single · 2023</span>
+            </div>
+          </div>
+          <div class="track-right">
+            <span class="track-duration">4:07</span>
+            <a href="#" class="track-link">Listen</a>
+          </div>
+        </div>
+
+        <div class="music-track">
+          <div class="track-left">
+            <span class="track-num">04</span>
+            <div class="track-info">
+              <span class="track-title">Track Title</span>
+              <span class="track-meta">Album / EP Name · 2023</span>
+            </div>
+          </div>
+          <div class="track-right">
+            <span class="track-duration">6:55</span>
+            <a href="#" class="track-link">Listen</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUME / CV -->
+  <section id="resume">
+    <div class="container">
+      <p class="section-label">CV</p>
+
+      <div class="resume-block">
+        <p class="resume-block-title">Exhibitions</p>
+
+        <div class="resume-item">
+          <span class="resume-year">2024</span>
+          <div>
+            <p class="resume-content-title">Exhibition Title</p>
+            <p class="resume-content-sub">Gallery Name, City</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2023</span>
+          <div>
+            <p class="resume-content-title">Exhibition Title</p>
+            <p class="resume-content-sub">Gallery Name, City</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2022</span>
+          <div>
+            <p class="resume-content-title">Exhibition Title</p>
+            <p class="resume-content-sub">Gallery Name, City — Group Show</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="resume-block">
+        <p class="resume-block-title">Music Releases</p>
+
+        <div class="resume-item">
+          <span class="resume-year">2024</span>
+          <div>
+            <p class="resume-content-title">Album / EP Title</p>
+            <p class="resume-content-sub">Self-released / Label Name</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2023</span>
+          <div>
+            <p class="resume-content-title">Album / EP Title</p>
+            <p class="resume-content-sub">Label Name</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="resume-block">
+        <p class="resume-block-title">Education & Residencies</p>
+
+        <div class="resume-item">
+          <span class="resume-year">2021</span>
+          <div>
+            <p class="resume-content-title">Degree / Residency Program</p>
+            <p class="resume-content-sub">Institution Name, City</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2019</span>
+          <div>
+            <p class="resume-content-title">Degree / Residency Program</p>
+            <p class="resume-content-sub">Institution Name, City</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <p class="section-label">contact</p>
+      <div class="contact-inner">
+        <h2 class="contact-headline">Let's<br>Talk.</h2>
+        <div class="contact-links">
+          <!-- Edit these with your actual links -->
+          <a href="mailto:you@example.com" class="contact-link">you@example.com</a>
+          <a href="https://instagram.com/yourhandle" target="_blank" class="contact-link">Instagram</a>
+          <a href="https://soundcloud.com/yourhandle" target="_blank" class="contact-link">SoundCloud</a>
+          <a href="https://bandcamp.com/yourhandle" target="_blank" class="contact-link">Bandcamp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>[Your Name] © 2025</span>
+    <span>All rights reserved</span>
+  </footer>
+
+</body>
+</html>
