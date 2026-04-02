@@ -11,7 +11,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0e0e0e;
+      --bg: #ffffff;
       --surface: #161616;
       --border: #2a2a2a;
       --border-light: #333;
@@ -160,6 +160,7 @@
     }
     .hero-sub {
       max-width: 480px;
+      mix-blend-mode: difference;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.8;
@@ -337,7 +338,7 @@
     .track-link {
       font-size: 10px;
       letter-spacing: 0.15em;
-      text-transform: uppercase;
+      text-transform: none;
       color: var(--accent-dim);
       text-decoration: none;
       border: 1px solid var(--border-light);
@@ -352,7 +353,7 @@
     .resume-block-title {
       font-size: 10px;
       letter-spacing: 0.2em;
-      text-transform: uppercase;
+      text-transform: none;
       color: var(--accent-dim);
       margin-bottom: 1.25rem;
     }
