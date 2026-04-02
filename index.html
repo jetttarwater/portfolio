@@ -88,7 +88,16 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--accent); }
+    /* text readability
 
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 0;
+    }*/
+    
     /* ── HERO ── */
     #hero {
       min-height: 100vh;
@@ -100,6 +109,9 @@
       border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
+      background-image: url('rizzograph not for class.jpg');
+      background-size: cover;
+      background-position: center;
     }
     .hero-grid-line {
       position: absolute;
