@@ -11,7 +11,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #ffffff;
+      --bg: #707070;
       --surface: #161616;
       --border: #2a2a2a;
       --border-light: #333;
@@ -161,7 +161,7 @@
     .hero-sub {
       max-width: 480px;
       mix-blend-mode: difference;
-      color: var(--muted);
+      color: white;
       font-size: 13px;
       line-height: 1.8;
       border-left: 1px solid var(--border-light);
@@ -288,7 +288,8 @@
     }
     .artwork-year {
       font-size: 11px;
-      color: var(--accent);
+      mix-blend-mode: difference;
+      color: white;
       letter-spacing: 0.1em;
     }
     /* Placeholder for artwork items without images */
@@ -302,7 +303,7 @@
       font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.15em;
-      text-transform: uppercase;
+      text-transform: none;
     }
 
     /* ── MUSIC ── */
